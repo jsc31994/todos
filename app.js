@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const moment = require('moment-timezone');
 
 const app = express();
 app.use(express.json());
@@ -40,7 +41,7 @@ app.get('/', (req, res) => {
 
 app.get('/users/:id', (req, res) => {
   const userID = req.params.id
-  const user = users[userID]
+  const user = users[userID];
 
   if (user) {
     res.json(user);
@@ -50,9 +51,10 @@ app.get('/users/:id', (req, res) => {
 })
 
 app.get('/time', (req, res) => {
-
+  const currentTimeInLosAngeles = moment().tz('America/Los_Angeles').format('h:mm:ss A');
+  
   res.json({
-    time: new Date().toLocaleTimeString()
+    time: currentTimeInLosAngeles
   })
 })
 
