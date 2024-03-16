@@ -8,6 +8,22 @@ app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
+function renderHTML(time) {
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Current Time</title>
+      </head>
+      <body>
+        <p>The current time in Los Angeles is: ${time}</p>
+      </body>
+    </html>
+  `
+}
+
 const todoData = {
   todoItems: [
     {
@@ -51,11 +67,8 @@ app.get('/users/:id', (req, res) => {
 })
 
 app.get('/time', (req, res) => {
-  const currentTimeInLosAngeles = moment().tz('America/Los_Angeles').format('h:mm:ss A');
-  
-  res.json({
-    time: currentTimeInLosAngeles
-  })
+  const currentTimeInLosAngeles = moment().tz('America/Los_Angeles').format('h:mm A');
+  res.send(renderHTML(currentTimeInLosAngeles))
 })
 
 app.listen(PORT, () => {
