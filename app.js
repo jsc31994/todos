@@ -1,28 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const moment = require('moment-timezone');
+const fs = require('fs');
 
 const app = express();
+app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
-
-function renderHTML(time) {
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Current Time</title>
-      </head>
-      <body>
-        <p>The current time in Los Angeles is: ${time}</p>
-      </body>
-    </html>
-  `
-}
 
 const todoData = {
   todoItems: [
@@ -51,10 +36,6 @@ const users = {
   userId2: { id: 'userId2', firstName: 'Arthur', lastName: 'Reed' }
 }
 
-app.get('/', (req, res) => {
-  res.json(todoData)
-})
-
 app.get('/users/:id', (req, res) => {
   const userID = req.params.id
   const user = users[userID];
@@ -67,8 +48,18 @@ app.get('/users/:id', (req, res) => {
 })
 
 app.get('/time', (req, res) => {
-  const currentTimeInLosAngeles = moment().tz('America/Los_Angeles').format('h:mm A');
-  res.send(renderHTML(currentTimeInLosAngeles))
+  fs.readFile(__dirname + '/public/index.html', 'utf8', (err, html) => {
+    if (err) {
+      res.status(500).send('Error reading HTML file');
+      return;
+    }
+
+    res.send(html);
+  })
+})
+
+app.get('/', (req, res) => {
+  res.json(todoData)
 })
 
 app.listen(PORT, () => {
