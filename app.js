@@ -49,6 +49,13 @@ app.get('/users/:id', (req, res) => {
   }
 })
 
+app.get('/time', (req, res) => {
+
+  res.json({
+    time: new Date().toLocaleTimeString()
+  })
+})
+
 app.listen(PORT, () => {
   console.log('Server listening on port:', PORT)
 })
